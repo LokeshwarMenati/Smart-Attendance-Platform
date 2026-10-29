@@ -14,10 +14,15 @@ export const setAuthToken = (token: string | null) => {
 
 export const getAuthToken = () => inMemoryToken;
 
+const isLocalhost = typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
+const defaultApiUrl = isLocalhost ? '' : 'https://smart-attendance-lokeshwar.loca.lt';
+const rawApiBase = (import.meta.env.VITE_API_URL || defaultApiUrl).replace(/\/+$/, '');
+
 const api = axios.create({
-  baseURL: `${import.meta.env.VITE_API_URL || ''}/api/v1`,
+  baseURL: `${rawApiBase}/api/v1`,
   headers: {
-    'Content-Type': 'application/json'
+    'Content-Type': 'application/json',
+    'bypass-tunnel-reminder': 'true'
   }
 });
 

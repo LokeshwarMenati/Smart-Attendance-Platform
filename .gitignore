@@ -1,6 +1,9 @@
 target/
 frontend/node_modules/
 frontend/dist/
+.vercel/
+frontend/.vercel/
+*.tsbuildinfo
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/

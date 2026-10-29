@@ -4,6 +4,26 @@
 
 ---
 
+## 🔗 Live Application Links
+
+| Resource | URL | Description |
+|---|---|---|
+| 🚀 **Live Web App (Vercel)** | **[https://frontend-uer5.vercel.app/](https://frontend-uer5.vercel.app/)** | Public production deployment on Vercel |
+| 🌐 **Alternative Live URL** | **[https://frontend-sand-eight-xya4czd8dy.vercel.app/](https://frontend-sand-eight-xya4czd8dy.vercel.app/)** | Direct deployment URL |
+| 💻 **Local Development App** | **[http://localhost:3000/](http://localhost:3000/)** | Local Vite development server |
+| 📚 **Swagger UI / API Docs** | **[http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)** | Interactive OpenAPI test console |
+| 🩺 **Backend Health Check** | **[http://localhost:8080/actuator/health](http://localhost:8080/actuator/health)** | Spring Boot Actuator health endpoint |
+
+### 🔑 Demo Accounts (Pre-seeded & 1-Click Available)
+
+| Role | Email | Password | Permissions |
+|---|---|---|---|
+| **Employee** | `employee@smartattendance.com` | `Employee@12345` | Clock-in, clock-out, view personal history, request corrections |
+| **Manager** | `manager@smartattendance.com` | `Manager@12345` | Team overview, approve/reject correction requests |
+| **Admin** | `admin@smartattendance.com` | `Admin@12345` | Employee CRUD, system configuration, audit logs, CSV exports |
+
+---
+
 ## 1. System Architecture
 
 - **Backend**: Java 21 LTS, Spring Boot 3.3.5, Spring Security 6 (stateless JWT), Spring Data JPA, Hibernate, Bean Validation, HikariCP, Flyway, Actuator.
