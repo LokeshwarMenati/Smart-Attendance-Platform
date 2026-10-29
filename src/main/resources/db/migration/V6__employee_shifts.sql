@@ -1,0 +1,2 @@
+ALTER TABLE employees ADD COLUMN shift VARCHAR(20) NOT NULL DEFAULT 'MORNING';
+ALTER TABLE employees ADD CONSTRAINT chk_employees_shift CHECK (shift IN ('MORNING', 'EVENING', 'NIGHT'));
