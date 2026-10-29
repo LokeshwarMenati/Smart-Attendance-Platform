@@ -23,7 +23,11 @@ export const Login: React.FC = () => {
       navigate('/dashboard');
     } catch (err) {
       const axiosErr = err as AxiosError<{ detail?: string; title?: string }>;
-      const msg = axiosErr.response?.data?.detail || axiosErr.response?.data?.title || 'Login failed. Please check your credentials.';
+      const msg = axiosErr.response?.data?.detail
+        || axiosErr.response?.data?.title
+        || (axiosErr.response
+          ? 'Login failed. Please check your credentials.'
+          : 'Unable to reach the attendance server. Configure VITE_API_URL in Vercel and redeploy the frontend.');
       setError(msg);
     } finally {
       setIsSubmitting(false);
@@ -163,4 +167,3 @@ export const Login: React.FC = () => {
     </div>
   );
 };
-
