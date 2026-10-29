@@ -139,6 +139,26 @@ npm run dev
 docker compose down
 ```
 
+### 2.6 Deploying the Frontend to Vercel
+
+The Vercel frontend must point to a publicly deployed Spring Boot backend. In the Vercel project settings, add this environment variable for **Production** and **Preview**:
+
+```text
+VITE_API_URL=https://your-backend-domain.example.com
+```
+
+Use the backend origin only; do not append `/api/v1`. The application adds `/api/v1` automatically. Redeploy the frontend after saving the variable.
+
+On the backend hosting platform, configure CORS to allow the Vercel origin:
+
+```text
+CORS_ALLOWED_ORIGINS=https://frontend-uer5.vercel.app
+```
+
+If you use more than one frontend origin, separate them with commas.
+
+For local development, leave `VITE_API_URL` unset. Vite then uses its local proxy at `http://localhost:8080`.
+
 ---
 
 ## 3. Demo Test Accounts
