@@ -16,41 +16,128 @@
 
 ## 2. Quick Start
 
-### 2.1 Start with Docker Compose (Recommended)
+These steps can be followed directly after cloning this repository from GitHub.
+
+### 2.1 Prerequisites
+
+Install the following tools:
+
+- Git
+- Java 21 JDK
+- Node.js 18 or newer and npm
+- Docker Desktop (recommended) or PostgreSQL 16
+
+Verify the installations:
+
+```bash
+git --version
+java -version
+node --version
+npm --version
+docker --version
+```
+
+### 2.2 Clone the Repository
+
+```bash
+git clone https://github.com/LokeshwarMenati/Smart-Attendance-Platform.git
+cd Smart-Attendance-Platform
+```
+
+### 2.3 Start with Docker Compose (Recommended)
+
+From the project root, run:
+
 ```bash
 docker compose up -d
 ```
+
 This spins up:
 - **PostgreSQL 16** on port `5432`
 - **Spring Boot Backend** on port `8080`
 - **React Frontend** on port `3000`
 
-### 2.2 Local Development Startup (Without Docker)
+Open the application:
 
-#### Step 1: Start PostgreSQL
+- Frontend: [http://localhost:3000](http://localhost:3000)
+- Backend health: [http://localhost:8080/actuator/health](http://localhost:8080/actuator/health)
+
+To stop the containers:
+
+```bash
+docker compose down
+```
+
+### 2.4 Local Development Startup (Without Docker)
+
+Use this option when PostgreSQL is already installed locally.
+
+#### Step 1: Configure the database
+
+Create a PostgreSQL database named `smart_attendance`, then set the required environment variables from `.env.example`:
+
+```bash
+DB_URL=jdbc:postgresql://localhost:5432/smart_attendance
+DB_USERNAME=postgres
+DB_PASSWORD=your_postgres_password
+JWT_SECRET=replace_with_a_secure_32_byte_secret
+```
+
+#### Step 2: Start PostgreSQL
+
+If PostgreSQL is running through Docker:
+
 ```bash
 docker compose up -d postgres
 ```
 
-#### Step 2: Build & Start Backend
-```bash
-# Windows
-.\mvnw.cmd clean package
-.\mvnw.cmd spring-boot:run -Dspring-boot.run.profiles=local
+#### Step 3: Build & Start Backend
 
-# Linux / macOS
+Windows PowerShell:
+
+```bash
+.\mvnw.cmd clean package
+.\mvnw.cmd spring-boot:run "-Dspring-boot.run.profiles=local"
+```
+
+Linux / macOS:
+
+```bash
 ./mvnw clean package
 ./mvnw spring-boot:run -Dspring-boot.run.profiles=local
 ```
+
 The backend starts at `http://localhost:8080`.
 
-#### Step 3: Start Frontend
+#### Step 4: Start Frontend
+
+Open a second terminal at the project root:
+
 ```bash
-cd frontend
+cd frontend/
 npm install
 npm run dev
 ```
+
 The frontend starts at `http://localhost:3000`.
+
+#### Step 5: Verify the application
+
+Open [http://localhost:3000](http://localhost:3000), then sign in with one of the demo accounts below. Confirm that the backend is available at [http://localhost:8080/actuator/health](http://localhost:8080/actuator/health).
+
+### 2.5 Common Run Commands
+
+```bash
+# Start backend with the local H2 profile (Windows)
+.\mvnw.cmd spring-boot:run "-Dspring-boot.run.profiles=local"
+
+# Start frontend
+cd frontend
+npm run dev
+
+# Stop Docker services
+docker compose down
+```
 
 ---
 
@@ -64,11 +151,32 @@ The platform automatically seeds initial demo accounts when started in local/dev
 | **MANAGER** | `manager@smartattendance.com` | `Manager@12345` | `MGR-001` |
 | **EMPLOYEE** | `employee@smartattendance.com` | `Employee@12345` | `EMP-001` |
 
+The local profile also creates additional demo employees across the Morning, Evening, and Night shifts so managers and administrators can review attendance analytics.
+
+## 4. Skills Used
+
+This project demonstrates the following technical skills:
+
+- Java 21 and object-oriented backend development
+- Spring Boot REST API development
+- Spring Security, JWT authentication, and role-based access control
+- Spring Data JPA and Hibernate entity/repository design
+- PostgreSQL database design, constraints, transactions, and Flyway migrations
+- H2 local development profile and idempotent demo-data seeding
+- Attendance domain modeling, clock-in/clock-out workflows, duration calculation, and overnight-session handling
+- Attendance correction requests with manager/admin approval and rejection
+- Attendance analytics, exception monitoring, audit trails, and notifications
+- React 18, TypeScript, Vite, and responsive CSS
+- Axios API integration and protected frontend routes
+- JUnit 5, Mockito, AssertJ, and Spring Boot integration testing
+- Docker Compose, Maven Wrapper, GitHub Actions, and API documentation with OpenAPI
+- Timezone-aware timestamps, validation, concurrency-safe business rules, and error handling
+
 ---
 
-## 4. Key Endpoints & cURL Examples
+## 5. Key Endpoints & cURL Examples
 
-### 4.1 Authenticate & Obtain JWT
+### 5.1 Authenticate & Obtain JWT
 ```bash
 curl -X POST http://localhost:8080/api/v1/auth/login \
   -H "Content-Type: application/json" \
@@ -88,7 +196,7 @@ Response:
 }
 ```
 
-### 4.2 Clock In
+### 5.2 Clock In
 ```bash
 curl -X POST http://localhost:8080/api/v1/attendance/clock-in \
   -H "Authorization: Bearer <TOKEN>" \
@@ -96,7 +204,7 @@ curl -X POST http://localhost:8080/api/v1/attendance/clock-in \
   -d '{"notes": "Starting morning shift"}'
 ```
 
-### 4.3 Clock Out
+### 5.3 Clock Out
 ```bash
 curl -X POST http://localhost:8080/api/v1/attendance/clock-out \
   -H "Authorization: Bearer <TOKEN>" \
@@ -104,13 +212,13 @@ curl -X POST http://localhost:8080/api/v1/attendance/clock-out \
   -d '{"notes": "Completed daily shift"}'
 ```
 
-### 4.4 View Personal Attendance History
+### 5.4 View Personal Attendance History
 ```bash
 curl -X GET "http://localhost:8080/api/v1/attendance/me?page=0&size=10" \
   -H "Authorization: Bearer <TOKEN>"
 ```
 
-### 4.5 Export Attendance CSV (Admin/Manager)
+### 5.5 Export Attendance CSV (Admin/Manager)
 ```bash
 curl -X GET "http://localhost:8080/api/v1/reports/attendance/export" \
   -H "Authorization: Bearer <ADMIN_TOKEN>" \
@@ -119,7 +227,7 @@ curl -X GET "http://localhost:8080/api/v1/reports/attendance/export" \
 
 ---
 
-## 5. Running Automated Tests
+## 6. Running Automated Tests
 
 ```bash
 # Run all backend unit and integration tests (42 tests)
@@ -132,7 +240,7 @@ npm run build
 
 ---
 
-## 6. Interactive Documentation & Observability
+## 7. Interactive Documentation & Observability
 
 - **Swagger UI Interactive API**: [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
 - **OpenAPI 3 JSON Spec**: [http://localhost:8080/v3/api-docs](http://localhost:8080/v3/api-docs)
@@ -140,11 +248,11 @@ npm run build
 
 ---
 
-## 7. Documentation Index
+## 8. Documentation Index
 
-- [`docs/PROJECT_PLAN.md`](file:///docs/PROJECT_PLAN.md) — Phased architecture roadmap & risk mitigations.
-- [`docs/ARCHITECTURE.md`](file:///docs/ARCHITECTURE.md) — Modular monolith design & ADRs.
-- [`docs/API_SPECIFICATION.md`](file:///docs/API_SPECIFICATION.md) — REST API specification & RFC 9457 error contracts.
-- [`docs/DATABASE_DESIGN.md`](file:///docs/DATABASE_DESIGN.md) — PostgreSQL ERD, constraints, and Flyway migration plan.
-- [`docs/TESTING.md`](file:///docs/TESTING.md) — Test execution guide and coverage overview.
-- [`docs/INTERVIEW_GUIDE.md`](file:///docs/INTERVIEW_GUIDE.md) — Comprehensive technical interview guide with 25 questions & answers.
+- [`docs/PROJECT_PLAN.md`](docs/PROJECT_PLAN.md) — Phased architecture roadmap & risk mitigations.
+- [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — Modular monolith design & ADRs.
+- [`docs/API_SPECIFICATION.md`](docs/API_SPECIFICATION.md) — REST API specification & RFC 9457 error contracts.
+- [`docs/DATABASE_DESIGN.md`](docs/DATABASE_DESIGN.md) — PostgreSQL ERD, constraints, and Flyway migration plan.
+- [`docs/TESTING.md`](docs/TESTING.md) — Test execution guide and coverage overview.
+- [`docs/INTERVIEW_GUIDE.md`](docs/INTERVIEW_GUIDE.md) — Comprehensive technical interview guide with 25 questions & answers.
