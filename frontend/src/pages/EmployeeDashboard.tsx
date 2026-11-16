@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { attendanceApi } from '../services/api';
 import { AttendanceRecord } from '../types';
 import { ConfirmationModal } from '../components/ConfirmationModal';
-import { Clock, CheckCircle2, Calendar } from 'lucide-react';
+import { Clock, CheckCircle2, Calendar, User, Mail, ShieldCheck } from 'lucide-react';
 import { AxiosError } from 'axios';
 
 export const EmployeeDashboard: React.FC = () => {
@@ -89,6 +89,71 @@ export const EmployeeDashboard: React.FC = () => {
           Here is your daily attendance status and shift overview.
         </p>
       </div>
+
+      {/* Employee Details & Shift Overview Card */}
+      {user && (
+        <div className="card" style={{ padding: '1.25rem 1.5rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+              <div style={{
+                width: '48px',
+                height: '48px',
+                borderRadius: '12px',
+                backgroundColor: '#eff6ff',
+                color: '#2563eb',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontWeight: 700,
+                fontSize: '1.25rem'
+              }}>
+                {user.firstName?.[0] || 'E'}{user.lastName?.[0] || ''}
+              </div>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <h2 style={{ fontSize: '1.125rem', fontWeight: 600, color: '#0f172a' }}>{user.fullName}</h2>
+                  <span className={`badge ${user.status === 'ACTIVE' ? 'badge-completed' : 'badge-inactive'}`}>
+                    {user.status || 'ACTIVE'}
+                  </span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginTop: '0.25rem', fontSize: '0.8125rem', color: '#64748b', flexWrap: 'wrap' }}>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}>
+                    <User size={14} /> ID: <strong style={{ fontFamily: 'monospace', color: '#0f172a' }}>{user.employeeCode}</strong>
+                  </span>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}>
+                    <Mail size={14} /> {user.email}
+                  </span>
+                  <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}>
+                    <ShieldCheck size={14} /> Role: <strong style={{ color: '#0f172a' }}>{user.role}</strong>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '1rem',
+              padding: '0.6rem 1rem',
+              backgroundColor: '#f8fafc',
+              border: '1px solid #e2e8f0',
+              borderRadius: '8px'
+            }}>
+              <div>
+                <div style={{ fontSize: '0.7rem', fontWeight: 600, color: '#64748b', textTransform: 'uppercase' }}>
+                  Assigned Shift
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.2rem' }}>
+                  <span className="badge badge-active">{user.shift || 'MORNING'}</span>
+                  <span style={{ fontSize: '0.8125rem', fontWeight: 500, color: '#334155' }}>
+                    {user.shift === 'MORNING' ? '06:00 – 14:00' : user.shift === 'EVENING' ? '14:00 – 22:00' : user.shift === 'NIGHT' ? '22:00 – 06:00' : '09:00 – 17:00'}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {error && (
         <div style={{ backgroundColor: '#fee2e2', border: '1px solid #f87171', color: '#b91c1c', padding: '0.75rem 1rem', borderRadius: '8px', fontSize: '0.875rem' }}>

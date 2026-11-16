@@ -160,6 +160,29 @@ public class DataInitializer implements CommandLineRunner {
                 attendanceRepository.save(record);
             }
         }
+
+        // Specifically seed past attendance for Alex Rivera (EMP-001) so personal dashboard, history & reports are populated
+        employeeRepository.findByEmployeeCodeIgnoreCase("EMP-001").ifPresent(alex -> {
+            for (int dayOffset = 5; dayOffset >= 1; dayOffset--) {
+                LocalDate date = today.minusDays(dayOffset);
+                if (attendanceRepository.findByEmployeeAndAttendanceDate(alex, date).isEmpty()) {
+                    Instant clockIn = date.atTime(8, 55).atZone(zone).toInstant();
+                    Instant clockOut = date.atTime(17, 10).atZone(zone).toInstant();
+                    AttendanceRecord rec = new AttendanceRecord(
+                            UUID.randomUUID(),
+                            alex,
+                            date,
+                            clockIn,
+                            "Regular shift completed - Feature development and testing"
+                    );
+                    rec.setClockOutTime(clockOut);
+                    rec.setDurationMinutes((int) Duration.between(clockIn, clockOut).toMinutes());
+                    rec.setStatus(AttendanceStatus.COMPLETED);
+                    attendanceRepository.save(rec);
+                }
+            }
+        });
+
         log.info("Seeded demo attendance records for analytics dashboard.");
     }
 }
